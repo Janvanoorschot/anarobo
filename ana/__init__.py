@@ -1,1 +1,1 @@
-from .anal101 import loaddata, plotdata
+from .sittingwalker import SittingWalker

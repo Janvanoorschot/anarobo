@@ -1,35 +1,8 @@
 
-# Designing The Anonymised RA data store
+# Doing statistics on Robomind Academy
 
-# The anonymised DataInput
+# Reading the data
 
-robodata --ano ----- handledperiods
-         |        |
-         |        --- <one for every model-type>
-         |        |
-         |        --- opensittings
-         |        |
-         |        --- <one sittings-period-file per sittings-period>
-         |
-         --anoindex-- guid2id
-                   |
-                   -- session to sitting
-                   
-# A Sitting
+The files are in "/data/robodata/ano/sittings-2016-6-19.gz". 
+Inside these datafiles is enough info to do reasonable statistics to do first work.
 
-* a pupil
-* a starttime
-* an endtime
-* a sequence of actions: time+actiontype+...
-  . goto storylineitem
-  . runscript
-    . run-data
-    . 
-    . 
-  . complete_storyline
-  . complete_course
- 
-# calculating a new sittings-period
-* start at the next period (from handledperiods)
-* preload model-types
-* preload opensittings
