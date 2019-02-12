@@ -3,16 +3,19 @@ import json
 
 SITTINGSDIR = '/data/robodata/ano'
 walker = ana.SittingWalker(SITTINGSDIR)
+dao = ana.RoboDAO(SITTINGSDIR)
 
 stats = {}
 
 
-def addtime(sli, person, cumtime, isdone):
-    if sli not in stats:
+def addtime(sli_id, person, cumtime, isdone):
+    sli = dao.get_by_id('StorylineItem',sli_id)
+    sli_name = sli.fullname()
+    if sli_name not in stats:
         entry = {}
-        stats[sli] = entry
+        stats[sli_name] = entry
     else:
-        entry = stats[sli]
+        entry = stats[sli_name]
     if person not in entry:
         record = {'cumtime': 0, 'count': 0, 'completed': False}
         entry[person] = record
@@ -32,14 +35,12 @@ for sitting in walker:
     for action in sitting['actions']:
         if action['type'] == 'runscript':
             sli = action['storylineitem']
-            cumtime = action['toffset'] - donetoffset
-            donetoffset = action['toffset']
             if 'success' in action['details'] and action['details']['success']:
                 isdone = True
             else:
                 isdone = False
+            cumtime = action['toffset'] - donetoffset
             addtime(sli, person, cumtime, isdone)
-            # cnt = cnt + 1
-            # str = json.dumps(sitting, indent=2)
+            donetoffset = action['toffset']
 
 print("done")
