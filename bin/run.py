@@ -1,5 +1,3 @@
-import ana
-
-SITTINGSDIR = '/data/robodata/ano'
+import ana.stats
 
 
