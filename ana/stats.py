@@ -1,6 +1,4 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import ana
 
 # getting to run:
@@ -175,6 +173,7 @@ def calc_stats(np):
         stats.append({'storyline': storyline, 'stats': nps.describe()})
     return stats
 
+
 def calc_means(np):
     cumtimes = []
     counts = []
@@ -188,3 +187,23 @@ def calc_means(np):
     s_counts = pd.Series(counts, index=indices)
     result = pd.DataFrame({'cumtimes':s_cumtimes, 'counts':s_counts})
     return result
+
+
+def generate_csv (np, filename):
+    import csv
+    import gzip
+    with gzip.open(filename, 'wt') as handle:
+        writer = csv.writer(handle)
+        for storyline in STORYLINES:
+            cumtimes = np[storyline]['cumtime']
+            counts = np[storyline]['count']
+            persons = np[storyline]['person']
+            for idx, person in enumerate(persons):
+                cumtime = cumtimes[idx]
+                count = counts[idx]
+                writer.writerow([storyline, person, cumtime, count])
+
+
+import os.path
+np = sli_stats(SITTINGSDIR)
+generate_csv(np, os.path.join(SITTINGSDIR, "person_results.gz"))
