@@ -194,6 +194,7 @@ def generate_csv (np, filename):
     import gzip
     with gzip.open(filename, 'wt') as handle:
         writer = csv.writer(handle)
+        writer.writerow(["storyline", "person", "cumtime", "count"])
         for storyline in STORYLINES:
             cumtimes = np[storyline]['cumtime']
             counts = np[storyline]['count']
