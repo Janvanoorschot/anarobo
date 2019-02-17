@@ -145,7 +145,11 @@ def sli_stats(dir):
                 else:
                     isdone = False
                 cumtime = action['toffset'] - donetoffset
-                addtime(sli, person, cumtime, isdone)
+                # there are 'cumtimes' that are negative, due to invalid timestamps, ignore those
+                if cumtime > 0:
+                    addtime(sli, person, cumtime, isdone)
+                else:
+                    pass
                 donetoffset = action['toffset']
 
     pandastats = {}
