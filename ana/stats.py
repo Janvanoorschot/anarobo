@@ -8,8 +8,7 @@ import ana
 # means = ana.stats.calc_means(np)
 
 
-SITTINGSDIR = '/data/robodata/ano'
-STORYLINES = [
+STORYLINES_BASIS1 = [
     'Basis_1/Getting started/1',
     'Basis_1/Getting started/2',
     'Basis_1/Getting started/3',
@@ -54,6 +53,8 @@ STORYLINES = [
     'Basis_1/Line following/3',
     'Basis_1/Line following/4',
     'Basis_1/Line following/5',
+]
+STORYLINES_BASIS2 = [
     'Basis_2/Tracking and tracing 2/1',
     'Basis_2/Tracking and tracing 2/2',
     'Basis_2/Tracking and tracing 2/3',
@@ -108,6 +109,34 @@ STORYLINES = [
     'Basis_2/Repairing roads/6',
     'Basis_2/Repairing roads/7',
 ]
+STORYLINES_HOUROFCODE = [
+    'HourOfCode/Getting started/0',
+    'HourOfCode/Getting started/1',
+    'HourOfCode/Getting started/10',
+    'HourOfCode/Getting started/2',
+    'HourOfCode/Getting started/3',
+    'HourOfCode/Getting started/4',
+    'HourOfCode/Getting started/5',
+    'HourOfCode/Getting started/6',
+    'HourOfCode/Getting started/7',
+    'HourOfCode/Getting started/8',
+    'HourOfCode/Guarding and slalom/0',
+    'HourOfCode/Guarding and slalom/1',
+    'HourOfCode/Guarding and slalom/2',
+    'HourOfCode/Guarding and slalom/3',
+    'HourOfCode/Guarding and slalom/4',
+    'HourOfCode/Guarding and slalom/5',
+    'HourOfCode/Guarding and slalom/6',
+    'HourOfCode/Guarding and slalom/7',
+]
+STORYLINES_TEASER = [
+    'Teaser/A1/0',
+    'Teaser/A1/1',
+    'Teaser/A1/2',
+    'Teaser/A1/3',
+    'Teaser/A1/4',
+]
+
 
 def sli_stats(dir):
     walker = ana.SittingWalker(dir)
@@ -146,10 +175,10 @@ def sli_stats(dir):
                     isdone = False
                 cumtime = action['toffset'] - donetoffset
                 # there are 'cumtimes' that are negative, due to invalid timestamps, ignore those
-                if cumtime > 0:
+                if cumtime >= 0:
                     addtime(sli, person, cumtime, isdone)
                 else:
-                    pass
+                    print("eikel")
                 donetoffset = action['toffset']
 
     pandastats = {}
@@ -164,15 +193,23 @@ def sli_stats(dir):
                 cumtime.append(sts['cumtime'])
                 count.append(sts['count'])
                 person.append(sts['person'])
-        if sli.startswith('Basis'):
-            pandastats[sli] = {'cumtime': cumtime, 'count': count, 'person': person}
+        # if sli.startswith('Basis'):
+        pandastats[sli] = {'cumtime': cumtime, 'count': count, 'person': person}
     return pandastats
+
+def dump_storylines(np):
+    slis = set()
+    for sli in np.keys():
+        slis.add(sli)
+    slis = sorted(slis)
+    for sli in slis:
+        print(f"'{sli}',")
 
 
 def calc_stats(np):
 
     stats = []
-    for storyline in STORYLINES:
+    for storyline in STORYLINES_BASIS1:
         nps = pd.DataFrame(np[storyline])
         stats.append({'storyline': storyline, 'stats': nps.describe()})
     return stats
@@ -182,7 +219,7 @@ def calc_means(np):
     cumtimes = []
     counts = []
     indices = []
-    for storyline in STORYLINES:
+    for storyline in STORYLINES_BASIS1:
         nps = pd.DataFrame(np[storyline])
         indices.append(storyline)
         cumtimes.append(nps.mean().get('cumtime'))
@@ -193,22 +230,38 @@ def calc_means(np):
     return result
 
 
-def generate_csv (np, filename):
+def generate_one_csv(np, handle, arr):
     import csv
+    writer = csv.writer(handle)
+    writer.writerow(["storyline", "person", "cumtime", "count"])
+    for storyline in arr:
+        cumtimes = np[storyline]['cumtime']
+        counts = np[storyline]['count']
+        persons = np[storyline]['person']
+        for idx, person in enumerate(persons):
+            cumtime = cumtimes[idx]
+            count = counts[idx]
+            writer.writerow([storyline, person, cumtime, count])
+
+
+def generate_csv(np, dirname):
     import gzip
+    filename = os.path.join(dirname, "teaser.gz")
     with gzip.open(filename, 'wt') as handle:
-        writer = csv.writer(handle)
-        writer.writerow(["storyline", "person", "cumtime", "count"])
-        for storyline in STORYLINES:
-            cumtimes = np[storyline]['cumtime']
-            counts = np[storyline]['count']
-            persons = np[storyline]['person']
-            for idx, person in enumerate(persons):
-                cumtime = cumtimes[idx]
-                count = counts[idx]
-                writer.writerow([storyline, person, cumtime, count])
+        generate_one_csv(np, handle, STORYLINES_TEASER)
+    filename = os.path.join(dirname, "hourofcode.gz")
+    with gzip.open(filename, 'wt') as handle:
+        generate_one_csv(np, handle, STORYLINES_HOUROFCODE)
+    filename = os.path.join(dirname, "basis1.gz")
+    with gzip.open(filename, 'wt') as handle:
+        generate_one_csv(np, handle, STORYLINES_BASIS1)
+    filename = os.path.join(dirname, "basis2.gz")
+    with gzip.open(filename, 'wt') as handle:
+        generate_one_csv(np, handle, STORYLINES_BASIS2)
 
 
 import os.path
+SITTINGSDIR = '/data/robodata/ano'
+CVSDIR='/data/dev/anarobo/examples'
 np = sli_stats(SITTINGSDIR)
-generate_csv(np, os.path.join(SITTINGSDIR, "person_results.gz"))
+generate_csv(np, CVSDIR)
