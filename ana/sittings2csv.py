@@ -1,12 +1,4 @@
-import pandas as pd
 import ana
-
-# getting to run:
-# import ana.stats
-# np = ana.stats.sli_stats(ana.stats.SITTINGSDIR)
-# stats = ana.stats.calc_stats(np)
-# means = ana.stats.calc_means(np)
-
 
 STORYLINES_BASIS1 = [
     'Basis_1/Getting started/1',
@@ -139,6 +131,11 @@ STORYLINES_TEASER = [
 
 
 def sli_stats(dir):
+    """ Calculate the Storyline-items (sli) statistics given the sitting-data calculated
+    from the Robomind Academy. The sli statistics consist of storyline/person/count/cumtime
+    vectors. Count is the number of time the person executed a program for the storyline
+    and cumtime is the accumulated time spend on that solution.
+    """
     walker = ana.SittingWalker(dir)
     dao = ana.RoboDAO(dir)
     stats = {}
@@ -197,7 +194,9 @@ def sli_stats(dir):
         pandastats[sli] = {'cumtime': cumtime, 'count': count, 'person': person}
     return pandastats
 
+
 def dump_storylines(np):
+    """Dump the storylines from the sli-statistics."""
     slis = set()
     for sli in np.keys():
         slis.add(sli)
@@ -206,31 +205,8 @@ def dump_storylines(np):
         print(f"'{sli}',")
 
 
-def calc_stats(np):
-
-    stats = []
-    for storyline in STORYLINES_BASIS1:
-        nps = pd.DataFrame(np[storyline])
-        stats.append({'storyline': storyline, 'stats': nps.describe()})
-    return stats
-
-
-def calc_means(np):
-    cumtimes = []
-    counts = []
-    indices = []
-    for storyline in STORYLINES_BASIS1:
-        nps = pd.DataFrame(np[storyline])
-        indices.append(storyline)
-        cumtimes.append(nps.mean().get('cumtime'))
-        counts.append(nps.mean().get('count'))
-    s_cumtimes = pd.Series(cumtimes, index=indices)
-    s_counts = pd.Series(counts, index=indices)
-    result = pd.DataFrame({'cumtimes':s_cumtimes, 'counts':s_counts})
-    return result
-
-
 def generate_one_csv(np, handle, arr):
+    """generate the CSV content from thje sli-statistics array"""
     import csv
     writer = csv.writer(handle)
     writer.writerow(["storyline", "person", "cumtime", "count"])
@@ -245,6 +221,7 @@ def generate_one_csv(np, handle, arr):
 
 
 def generate_csv(np, dirname):
+    """create compressed csv files for all sli-statistics"""
     import gzip
     filename = os.path.join(dirname, "teaser.gz")
     with gzip.open(filename, 'wt') as handle:

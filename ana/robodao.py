@@ -5,6 +5,9 @@ from .model import Sitting, Action, Teacher, IPupil, APupil, Storyline, Storylin
 
 
 class RoboDAO:
+    """Gives access to the Robo model objects as defined in the model module. Objects
+    are preloaded from the ano-directory which contains the Robomind Academy
+    sitting datafiles"""
 
     TYPE2NAME = {
         'Action': None,
@@ -39,6 +42,8 @@ class RoboDAO:
         self.preload()
 
     def preload(self):
+        """Preload model objects as defined in the model module from the
+        anonymised sittings file in the ano-directory."""
         # load the objects
         for otype, fname in self.TYPE2NAME.items():
             if fname:
@@ -49,10 +54,7 @@ class RoboDAO:
                             omap = json.loads(line)
                             cls = self.TYPE2CLASS[otype]
                             item = cls.from_map(omap, self)
-                            self.store(otype, item)
-
-    def store(self, otype, item):
-        self.caches[otype][item.id] = item
+                            self.caches[otype][item.id] = item
 
     def get_by_id(self, otype, id):
         if otype not in self.TYPE2NAME:
