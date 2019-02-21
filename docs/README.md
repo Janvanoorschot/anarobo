@@ -62,16 +62,16 @@ the following attributes:
 * *scriptRecursive*: 1 if the script uses recursive calls, 0 otherwise
 * *successfulGets*: number of successful gets
 * *robotOrientation*: orientation (in degrees) of the robot at the end of the run
-* *gets*:
-* *successfulEats*:
-* *puts*:
-* *eats*:
-* *moves*:
-* *explored*:
-* *blackPaintUsed*:
-* *robotActions*:
-* *robotX*:
-* *robotY*:
-* *successfulPuts*:
-* *whitePaintUsed*:
-* *score*:
+* *gets*: total number of pickUp commands performed
+* *successfulEats*: number of successful Eat commands performed
+* *puts*: total number of putDown commands performed
+* *eats*:total number of Eat commands
+* *moves*: total number of moves
+* *explored*: total number of tiles explored
+* *blackPaintUsed*: number of tiles painted black
+* *robotActions*: total number of robot actions
+* *robotX*: X coordinate of final location of the robot
+* *robotY*: Y coordinate of final location of the robot
+* *successfulPuts*: number of succesful puts
+* *whitePaintUsed*: number of tiles painted white
+* *score*: score of this run
