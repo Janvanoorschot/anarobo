@@ -43,21 +43,12 @@ for index, row in dataset.iterrows():
 dataset['score'] = pd.Series(scores)
 
 # calculate overal scores for each person
-scoresbasis1 = dataset[['person','score']].groupby(['person']).describe()
+scoresbasis1 = dataset[['person', 'score']].groupby(['person']).describe()
 
 # get the good/bad/weird_guys
 bad_guys = scoresbasis1[(scoresbasis1['score']['count'] >= 43) & (scoresbasis1['score']['mean'] < 1.8)]
 good_guys = scoresbasis1[(scoresbasis1['score']['count'] >= 43) & (scoresbasis1['score']['mean'] > 2.4) & (scoresbasis1['score']['mean'] != 3.0)]
 weird_guys = scoresbasis1[(scoresbasis1['score']['count'] >= 43) & (scoresbasis1['score']['mean'] == 3.0)]
 
-# start with the plotting
-x = np.linspace(0, 2, 100)
-plt.plot(x, x, label='linear')
-plt.plot(x, x**2, label='quadratic')
-plt.plot(x, x**3, label='cubic')
-plt.xlabel('x label')
-plt.ylabel('y label')
-plt.title("Simple Plot")
-plt.legend()
-plt.show()
+
 
