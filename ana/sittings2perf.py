@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-#
 import ana
+import os
 
 STORYLINES_BASIS1 = [
     'Basis_1/Getting started/1',
@@ -132,7 +131,7 @@ STORYLINES_TEASER = [
 ]
 
 
-def sli_stats(dir):
+def sli_perf(dir):
     """ Calculate the Storyline-items (sli) statistics given the sitting-data calculated
     from the Robomind Academy. The sli statistics consist of storyline/person/count/cumtime
     vectors. Count is the number of time the person executed a program for the storyline
@@ -225,24 +224,16 @@ def generate_one_csv(np, handle, arr):
 def generate_csv(np, dirname):
     """create compressed csv files for all sli-statistics"""
     import gzip
-    filename = os.path.join(dirname, "teaser.gz")
+    filename = os.path.join(dirname, "perf_teaser.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_TEASER)
-    filename = os.path.join(dirname, "hourofcode.gz")
+    filename = os.path.join(dirname, "perf_hourofcode.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_HOUROFCODE)
-    filename = os.path.join(dirname, "basis1.gz")
+    filename = os.path.join(dirname, "perf_basis1.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_BASIS1)
-    filename = os.path.join(dirname, "basis2.gz")
+    filename = os.path.join(dirname, "perf_basis2.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_BASIS2)
 
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    import os.path
-    SITTINGSDIR = '/data/robodata/ano'
-    CVSDIR='/data/robodata/aggr'
-    np = sli_stats(SITTINGSDIR)
-    generate_csv(np, CVSDIR)
