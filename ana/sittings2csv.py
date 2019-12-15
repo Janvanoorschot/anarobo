@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#
 import ana
 
 STORYLINES_BASIS1 = [
@@ -237,8 +239,10 @@ def generate_csv(np, dirname):
         generate_one_csv(np, handle, STORYLINES_BASIS2)
 
 
-import os.path
-SITTINGSDIR = '/data/robodata/ano'
-CVSDIR='/data/dev/anarobo/examples'
-np = sli_stats(SITTINGSDIR)
-generate_csv(np, CVSDIR)
+if __name__ == "__main__":
+    # execute only if run as a script
+    import os.path
+    SITTINGSDIR = '/data/robodata/ano'
+    CVSDIR='/data/robodata/aggr'
+    np = sli_stats(SITTINGSDIR)
+    generate_csv(np, CVSDIR)
