@@ -6,7 +6,5 @@ SITTINGSDIR = '/data/robodata/ano'
 CVSDIR='/data/robodata/aggr'
 
 if __name__ == "__main__":
-    # execute only if run as a script
-    import os.path
     np = sli_perf(SITTINGSDIR)
     generate_csv(np, CVSDIR)
