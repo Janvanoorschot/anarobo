@@ -1,13 +1,18 @@
 import ana
-from datetime import date
 from datetime import datetime
-import os
+import os, gzip, csv
+
+CATEGORIES = {
+    'weekofyear': 'weekofyear',
+    'dayofweek': 'dayofweek',
+    'hourofday': 'hourofday'
+}
 
 def sli_stats(dir):
     """ Calculate the Storyline-items (sli) statistics given the sitting-data calculated
     from the Robomind Academy. The calculated sli statistics consist of
     the buckets:
-      . by weeknumber, per year c
+      . by weeknumber, per year
       . by day of the week, per year
       . by hour of the day, per year
     In each bucket the following counts are maintained:
@@ -22,54 +27,55 @@ def sli_stats(dir):
     stats = {}
 
     for sitting in walker:
-        donetoffset=0
-        sli = None
-        person = sitting['person']
+        person = dao.get(sitting['person'])
         stamp = datetime.strptime(sitting['starttime'], "%Y-%m-%dT%H:%M:%SZ")
-        print(f"here {stamp}")
+        [year, weekno, dayofweek] = stamp.isocalendar()
+        ano =  ident = inclass = teacher = 0
+        if person.isteacher:
+            teacher = 1
+        elif len(person.teachers) > 0:
+            inclass =  1
+        elif person.id[0] == 'A':
+            ano = 1
+        else:
+            ident = 1
+        # score [all, ano, indent, inclass, teacher]
+        score = [1, ano, ident, inclass, teacher]
+        do_score(stats, 'weekofyear', year, weekno, score)
+        do_score(stats, 'dayofweek', year, dayofweek, score)
+        do_score(stats, 'hourofday', year, stamp.hour, score)
+    return stats
 
-    pandastats = {}
-    for sli in stats:
-        cumtime = []
-        count = []
-        person = []
-        completed = []
-        for p in stats[sli]:
-            sts = stats[sli][p]
-            if sts['completed']:
-                cumtime.append(sts['cumtime'])
-                count.append(sts['count'])
-                person.append(sts['person'])
-        # if sli.startswith('Basis'):
-        pandastats[sli] = {'cumtime': cumtime, 'count': count, 'person': person}
-    return pandastats
+def do_score(stats, type, year, bucket, score):
+    if type not in stats:
+        tcoll = {}
+        stats[type] = tcoll
+    else:
+        tcoll = stats[type]
+    if year not in tcoll:
+        ycoll = {}
+        tcoll[year] = ycoll
+    else:
+        ycoll = tcoll[year]
+    if bucket not in ycoll:
+        cscore = [0,0,0,0,0]
+        ycoll[bucket] = cscore
+    else:
+        cscore = ycoll[bucket]
+    for i, val in enumerate(score):
+        cscore[i] += val
 
+def generate_csv(allstats, dirname):
+    """create compressed csv files for all """
+    for type in CATEGORIES.keys():
+        filename = os.path.join(dirname, f"stats_{type}.gz")
+        stats = allstats[type]
+        with gzip.open(filename, 'wt') as handle:
+            writer = csv.writer(handle)
+            writer.writerow(["year", CATEGORIES[type], "all", "ano", "ident", "inclass", "teacher"])
+            for year in sorted(stats.keys()):
+                ystats = stats[year]
+                for val in sorted(ystats.keys()):
+                    row = [year, val] + ystats[val]
+                    writer.writerow(row)
 
-def dump_storylines(np):
-    """Dump the storylines from the sli-statistics."""
-    slis = set()
-    for sli in np.keys():
-        slis.add(sli)
-    slis = sorted(slis)
-    for sli in slis:
-        print(f"'{sli}',")
-
-
-def generate_one_csv(np, handle, arr):
-    """generate the CSV content from thje sli-statistics array"""
-    import csv
-    writer = csv.writer(handle)
-    writer.writerow(["storyline", "person", "cumtime", "count"])
-    for storyline in arr:
-        cumtimes = np[storyline]['cumtime']
-        counts = np[storyline]['count']
-        persons = np[storyline]['person']
-        for idx, person in enumerate(persons):
-            cumtime = cumtimes[idx]
-            count = counts[idx]
-            writer.writerow([storyline, person, cumtime, count])
-
-
-def generate_csv(np, dirname):
-    """create compressed csv files for all sli-statistics"""
-    import gzip

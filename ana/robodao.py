@@ -56,6 +56,10 @@ class RoboDAO:
                             item = cls.from_map(omap, self)
                             self.caches[otype][item.id] = item
 
+    def get(self, id):
+        type = self._id2type(id)
+        return self.get_by_id(type, id)
+
     def get_by_id(self, otype, id):
         if otype not in self.TYPE2NAME:
             raise KeyError("no such type %s" % (otype,))
@@ -64,5 +68,9 @@ class RoboDAO:
         else:
             print(f"request for non-existing object: {otype}/{id}")
             return None
+
+    def _id2type(self, id):
+        import re
+        return re.search(r"\D+", id).group()
 
 
