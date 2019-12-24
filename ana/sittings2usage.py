@@ -131,7 +131,7 @@ STORYLINES_TEASER = [
 ]
 
 
-def sli_perf(dir):
+def sli_usage(dir):
     """ Calculate the Storyline-items (sli) statistics given the sitting-data calculated
     from the Robomind Academy. The sli statistics consist of storyline/person/count/cumtime
     vectors. Count is the number of time the person executed a program for the storyline
