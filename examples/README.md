@@ -17,3 +17,9 @@ CSV files consist of records containing:
 The Jupyter notebook Basis1.ipynb takes the CSV file of course
 Basis1 and scores the performance of the persons taking that course.
 
+This code generates PDF files and, on Ubuntu, needs the following
+external packages:
+
+```
+sudo apt-get install texlive texlive-xetex texlive-generic-extra texlive-generic-recommended pandoc
+```
