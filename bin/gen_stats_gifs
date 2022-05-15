@@ -24,6 +24,6 @@ if args.debug:
     debug = True
 
 if __name__ == "__main__":
-    from ana.sittings2usage import sli_usage, generate_csv
-    np = sli_usage(args.sdir)
-    generate_csv(np, args.cdir)
+    from ana.statsgifs import generategifs
+
+    generategifs(args.cdir, args.gdir)
