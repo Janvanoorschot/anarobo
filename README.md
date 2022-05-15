@@ -26,4 +26,4 @@ As an example this repo contains a Jupyter notebook which sketches a method for 
 the performance of pupils in a course. The raw compressed JSON data is not easy to handle 
 in a Jupyter Notebook while CSV files are. This example therefor also contains some Python
 code that extracts run-times (count) and accumulated time (cumtime) and stores it in CSV files.
-Here you find more documentation about the [Example Analysis](examples/README.md).
+Here you find more documentation about the [Example Analysis](notebooks/README.md).

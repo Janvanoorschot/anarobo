@@ -224,16 +224,16 @@ def generate_one_csv(np, handle, arr):
 def generate_csv(np, dirname):
     """create compressed csv files for all sli-statistics"""
     import gzip
-    filename = os.path.join(dirname, "perf_teaser.gz")
+    filename = os.path.join(dirname, "perf_teaser.csv.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_TEASER)
-    filename = os.path.join(dirname, "perf_hourofcode.gz")
+    filename = os.path.join(dirname, "perf_hourofcode.csv.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_HOUROFCODE)
-    filename = os.path.join(dirname, "perf_basis1.gz")
+    filename = os.path.join(dirname, "perf_basis1.csv.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_BASIS1)
-    filename = os.path.join(dirname, "perf_basis2.gz")
+    filename = os.path.join(dirname, "perf_basis2.csv.gz")
     with gzip.open(filename, 'wt') as handle:
         generate_one_csv(np, handle, STORYLINES_BASIS2)
 

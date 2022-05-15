@@ -68,7 +68,7 @@ def do_score(stats, type, year, bucket, score):
 def generate_csv(allstats, dirname):
     """create compressed csv files for all """
     for type in CATEGORIES.keys():
-        filename = os.path.join(dirname, f"stats_{type}.gz")
+        filename = os.path.join(dirname, f"stats_{type}.csv.gz")
         stats = allstats[type]
         with gzip.open(filename, 'wt') as handle:
             writer = csv.writer(handle)
