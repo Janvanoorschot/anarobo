@@ -12,6 +12,7 @@ class RoboDAO:
     TYPE2NAME = {
         'Action': None,
         'Sitting': None,
+        # 'APupil': None,
         'APupil': "apupil",
         'IPupil': "ipupil",
         'Teacher': "teacher",

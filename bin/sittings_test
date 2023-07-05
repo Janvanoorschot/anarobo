@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+import sys
+import os
+import argparse
+from ana import SittingWalker, RoboDAO
+
+# discover paths
+scriptpath = os.path.dirname(__file__)
+modpath = os.path.abspath(os.path.join(scriptpath, os.pardir))
+os.chdir(modpath)
+sys.path.append(modpath)
+
+ANODIR = os.path.join(modpath, '/data/robodata/ano')
+
+
+def test1(args):
+    anodir = args.adir
+    files = [
+        "sittings-2023-07-02.gz"
+    ]
+    walker = SittingWalker.from_files(anodir, files)
+    dao = RoboDAO(anodir)
+    cnt = 0
+    for sitting in walker:
+        cnt = cnt + 1
+    return cnt
+
+
+
+def main(args):
+    cnt = test1(args)
+    assert(cnt > 1)
+
+
+if __name__ == "__main__":
+    # get commandline parameters and mix everything
+    parser = argparse.ArgumentParser(description='Working with sittings (and refactoring the current workflow).')
+    parser.add_argument("--adir", type=str, default=os.environ.get("ANODIR", ANODIR), help="ano (sittings+model) directory")
+    parser.add_argument("--debug", type=bool,  default=False, help="output debugging information")
+
+    main(parser.parse_args())
+
