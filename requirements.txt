@@ -1,4 +1,5 @@
 jupyter
+hide-code
 pandas
 numpy
 python-dateutil

@@ -9,8 +9,8 @@ modpath = os.path.abspath(os.path.join(scriptpath, os.pardir))
 os.chdir(modpath)
 sys.path.append(modpath)
 
-SITTINGSDIR = os.path.join(modpath, 'data/ano')
-CSVDIR=os.path.join(modpath, 'data/csv')
+SITTINGSDIR = os.path.join(modpath, '/data/robodata/ano')
+CSVDIR=os.path.join(modpath, '/data/robodata/csv')
 
 # get commandline parameters and mix everything
 parser = argparse.ArgumentParser(description='Calculate Usage info from the sittings files.')

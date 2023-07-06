@@ -22,7 +22,7 @@ def sli_stats(dir):
       . class-student
       . teacher
     """
-    walker = ana.SittingWalker(dir)
+    walker = ana.SittingWalker.from_dir(dir)
     dao = ana.RoboDAO(dir)
     stats = {}
 

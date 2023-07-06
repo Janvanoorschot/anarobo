@@ -137,7 +137,7 @@ def sli_usage(dir):
     vectors. Count is the number of time the person executed a program for the storyline
     and cumtime is the accumulated time spend on that solution.
     """
-    walker = ana.SittingWalker(dir)
+    walker = ana.SittingWalker.from_dir(dir)
     dao = ana.RoboDAO(dir)
     stats = {}
 
@@ -212,13 +212,14 @@ def generate_one_csv(np, handle, arr):
     writer = csv.writer(handle)
     writer.writerow(["storyline", "person", "cumtime", "count"])
     for storyline in arr:
-        cumtimes = np[storyline]['cumtime']
-        counts = np[storyline]['count']
-        persons = np[storyline]['person']
-        for idx, person in enumerate(persons):
-            cumtime = cumtimes[idx]
-            count = counts[idx]
-            writer.writerow([storyline, person, cumtime, count])
+        if storyline in np:
+            cumtimes = np[storyline]['cumtime']
+            counts = np[storyline]['count']
+            persons = np[storyline]['person']
+            for idx, person in enumerate(persons):
+                cumtime = cumtimes[idx]
+                count = counts[idx]
+                writer.writerow([storyline, person, cumtime, count])
 
 
 def generate_csv(np, dirname):
