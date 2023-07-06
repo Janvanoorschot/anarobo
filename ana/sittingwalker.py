@@ -15,10 +15,10 @@ class SittingWalker:
         self.handler = self.next_handler()
 
     @staticmethod
-    def from_dir(cls, dir):
+    def from_dir(anodir):
         sittingspattern = re.compile(SittingWalker.SITTINGPATTERN)
-        files = sorted([file for file in os.listdir(dir) if sittingspattern.match(file)])
-        return SittingWalker(dir, files)
+        files = sorted([file for file in os.listdir(anodir) if sittingspattern.match(file)])
+        return SittingWalker(anodir, files)
 
     def from_files(anodir, files):
         return SittingWalker(anodir, files)

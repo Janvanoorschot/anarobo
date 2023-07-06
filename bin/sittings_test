@@ -18,7 +18,8 @@ def test1(args):
     files = [
         "sittings-2023-07-02.gz"
     ]
-    walker = SittingWalker.from_files(anodir, files)
+    # walker = SittingWalker.from_ files(anodir, files)
+    walker = SittingWalker.from_dir(anodir)
     dao = RoboDAO(anodir)
     cnt = 0
     for sitting in walker:
