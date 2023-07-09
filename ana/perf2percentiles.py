@@ -8,7 +8,9 @@ def courses_percentiles(dir):
     cp = {}
     pathlist = Path(dir   ).glob("perf_*.gz")
     for path in pathlist:
-        coursename = path.stem[5:]
+        csvname = path.stem[5:]
+        endpos = csvname.rfind('.csv')
+        coursename = csvname[:endpos]
         cp[coursename] = {}
     return cp
 
